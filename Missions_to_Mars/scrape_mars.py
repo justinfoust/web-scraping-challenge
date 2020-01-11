@@ -1,14 +1,16 @@
 from bs4 import BeautifulSoup as bs
 from splinter import Browser
 import pandas as pd
+import time
 
 def scrape():
-    browser = Browser('chrome', headless=False)
+    browser = Browser('chrome')
     scrapings = {}
 
     #NASA Mars News
     url = 'https://mars.nasa.gov/news/'
     browser.visit(url)
+    time.sleep(3)
     html = browser.html
     soup = bs(html, 'html.parser')
     results = soup.find_all('li', class_='slide')
@@ -17,7 +19,8 @@ def scrape():
         'news_p': results[0].find('div', class_='article_teaser_body').text
     }
 
-    #JPL Mars Space Images
+
+    # #JPL Mars Space Images
     url = 'https://www.jpl.nasa.gov/spaceimages/?search=&category=Mars'
     browser.visit(url)
 
@@ -27,24 +30,32 @@ def scrape():
     img = results[0]
     img.click()
 
+    time.sleep(3)
+
     html = browser.html
     soup = bs(html, 'html.parser')
     scrapings['img_url'] = "https://www.jpl.nasa.gov" + soup.find('img', class_='fancybox-image')['src']
 
-    #Mars Weather
+
+    # #Mars Weather
     url = 'https://twitter.com/marswxreport?lang=en'
     browser.visit(url)
+
+    time.sleep(5)
+
     html = browser.html
     soup = bs(html, 'html.parser')
-    scrapings['mars_weather'] = soup.find('div', class_='content').find('div', class_='js-tweet-text-container').p.contents[0]
+    scrapings['mars_weather'] = soup.find('div', class_='js-tweet-text-container').p.contents[0]
 
-    #Mars Facts
+
+    # #Mars Facts
     url = 'https://space-facts.com/mars/'
     tables = pd.read_html(url)
     clean = tables[0].set_index(0).rename(columns={1:''}).rename_axis(index={0: ''})
     scrapings['table_string'] = clean.to_html()
 
-    #Mars Hemispheres
+
+    # #Mars Hemispheres
     url = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
     hemisphere_image_urls = []
 
@@ -58,6 +69,8 @@ def scrape():
         result = browser.find_by_xpath(xpath)
         result[i].click()
         
+        time.sleep(3)
+
         html = browser.html
         soup = bs(html, 'html.parser')
         hemisphere_image_urls.append({
@@ -67,4 +80,8 @@ def scrape():
     
     scrapings['hemisphere_image_urls'] = hemisphere_image_urls
 
+    browser.quit()
+
     return scrapings
+
+# scrape()
