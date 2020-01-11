@@ -52,7 +52,7 @@ def scrape():
     url = 'https://space-facts.com/mars/'
     tables = pd.read_html(url)
     clean = tables[0].set_index(0).rename(columns={1:''}).rename_axis(index={0: ''})
-    scrapings['table_string'] = clean.to_html()
+    scrapings['table_string'] = clean.to_html(classes='table')
 
 
     # #Mars Hemispheres
