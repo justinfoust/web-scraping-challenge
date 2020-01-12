@@ -1,3 +1,9 @@
+###---------------------------------------------------------###
+###   Web Scraping HW -- Mission to Mars                    ###
+###   Justin Foust  --  01/11/2020  --  Data Boot Camp      ###
+###---------------------------------------------------------###
+
+
 from bs4 import BeautifulSoup as bs
 from splinter import Browser
 import pandas as pd
